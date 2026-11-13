@@ -1,0 +1,187 @@
+/* ==========================================================================
+   tokens.css — Design tokens d'Indie Game Fest (rangés dans le layer « base »)
+   --------------------------------------------------------------------------
+   Deux niveaux :
+   1. PRIMITIFS : valeurs brutes nommées d'après ce qu'elles SONT
+      (--color-plum-950, --space-4…). Jamais utilisés dans les composants.
+   2. SÉMANTIQUES : rôles nommés d'après ce qu'ils FONT
+      (--color-surface, --color-action…). Seuls tokens utilisés dans
+      layout.css et components.css.
+   Changer de thème = modifier les sémantiques, jamais les composants.
+   Identité : ambiance « salle d'arcade de nuit » — prune profond, violet,
+   lavande et une touche de vert sarcelle, police pixel pour les titres.
+   ========================================================================== */
+
+@layer base {
+  :root {
+    /* ---------- 1. Primitifs ---------------------------------------- */
+
+    /* Palette en oklch(L C H) : L = luminosité perçue, ce qui permet de
+       dériver des nuances régulières et de prévoir les contrastes.
+       Ratios vérifiés (WCAG) : voir README, section contrastes. */
+    --color-plum-950: oklch(16% 0.06 315);
+    --color-plum-900: oklch(21% 0.08 315);
+    --color-plum-800: oklch(29% 0.1 315);
+    --color-plum-700: oklch(38% 0.12 315);
+    --color-violet-600: oklch(47% 0.18 315);
+    --color-violet-300: oklch(78% 0.12 315);
+    --color-lavender-50: oklch(98% 0.012 315);
+    --color-lavender-100: oklch(95% 0.025 315);
+    --color-lavender-200: oklch(89% 0.045 315);
+    --color-teal-700: oklch(42% 0.07 185);
+    --color-teal-300: oklch(82% 0.11 180);
+    --color-white: oklch(100% 0 0);
+    --color-transparent: oklch(100% 0 0 / 0);
+
+    /* Échelle d'espacements (base 0.25rem) */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-24: 6rem;
+
+    /* Rayons */
+    --radius-4: 0.25rem;
+    --radius-12: 0.75rem;
+    --radius-20: 1.25rem;
+    --radius-full: 999px;
+
+    /* Durées et courbes d'animation */
+    --duration-150: 150ms;
+    --duration-300: 300ms;
+    --duration-600: 600ms;
+    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+    /* Familles de polices (Google Fonts, chargées dans index.html) */
+    --font-family-pixel: "Pixelify Sans", ui-monospace, monospace;
+    --font-family-sans: "Inter", system-ui, sans-serif;
+
+    /* Largeurs de lecture */
+    --size-72: 72rem;
+    --size-40: 40rem;
+
+    /* ---------- 2. Sémantiques -------------------------------------- */
+
+    /* Indispensable : sans color-scheme, light-dark() ne bascule pas et
+       les éléments natifs (cases, barres de défilement) restent clairs. */
+    color-scheme: light dark;
+
+    /* light-dark(valeur thème clair, valeur thème sombre) */
+    --color-surface: light-dark(var(--color-lavender-50), var(--color-plum-950));
+    --color-surface-alt: light-dark(var(--color-lavender-100), var(--color-plum-900));
+    --color-surface-raised: light-dark(var(--color-white), var(--color-plum-800));
+    /* Bandeaux de marque (en-tête, pied de page) : toujours prune avec le
+       motif d'icônes, dans les deux thèmes, comme le logo. */
+    --color-surface-brand: var(--color-plum-800);
+    --color-on-brand: var(--color-lavender-50);
+    --color-on-brand-muted: var(--color-lavender-200);
+    --color-accent-brand: var(--color-teal-300);
+    --color-focus-brand: var(--color-teal-300);
+    /* Chemin relatif au dossier css/ (tokens.css et layout.css y sont) */
+    --image-pattern: url("../img/pattern.png");
+    --image-hero: url("../img/lille-Gp.webp");
+    --color-text: light-dark(var(--color-plum-950), var(--color-lavender-50));
+    --color-text-muted: light-dark(var(--color-plum-700), var(--color-lavender-200));
+    --color-accent: light-dark(var(--color-violet-600), var(--color-violet-300));
+    --color-border: light-dark(var(--color-lavender-200), var(--color-plum-700));
+    /* Bouton principal : violet plein en clair, pilule lavande en sombre */
+    --color-action: light-dark(var(--color-violet-600), var(--color-lavender-100));
+    --color-on-action: light-dark(var(--color-white), var(--color-violet-600));
+    /* Couleur d'appui (badges, horaires) : le vert sarcelle de l'identité */
+    --color-highlight: light-dark(var(--color-teal-700), var(--color-teal-300));
+    --color-on-highlight: light-dark(var(--color-white), var(--color-plum-950));
+    --color-focus: light-dark(var(--color-violet-600), var(--color-teal-300));
+    /* Halo des titres : invisible en clair, violet néon en sombre */
+    --color-glow: light-dark(var(--color-transparent), var(--color-violet-600));
+    /* Voile posé sur la photo du hero : la couleur de fond du thème à 85 %.
+       Comme --color-surface utilise light-dark(), le voile est lavande en
+       jour et prune en nuit. 85 % garantit l'AA (≥ 5:1) des textes du hero
+       même au-dessus du pixel le plus clair ou le plus sombre de la photo. */
+    --color-hero-overlay: color-mix(in srgb, var(--color-surface) 85%, transparent);
+
+    /* Typographie */
+    --font-heading: var(--font-family-pixel);
+    --font-body: var(--font-family-sans);
+
+    /* Typographie fluide : clamp(minimum, valeur préférée, maximum).
+       La part en rem de la valeur préférée garde le zoom navigateur actif. */
+    --font-size-small: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);
+    --font-size-body: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+    --font-size-lead: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
+    --font-size-h3: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+    --font-size-h2: clamp(1.75rem, 1.3rem + 2vw, 2.75rem);
+    --font-size-h1: clamp(2.5rem, 1.5rem + 5vw, 5.5rem);
+    --font-size-price: clamp(2rem, 1.6rem + 1.5vw, 2.75rem);
+
+    /* Espacements par rôle — les composants n'utilisent QUE ceux-ci.
+       inset = marge intérieure (padding) ; gap = écart entre éléments.
+       Changer la densité du site = modifier ces lignes, pas les composants. */
+    --space-gutter: var(--space-4);
+    --space-section: clamp(var(--space-12), 2rem + 5vw, var(--space-24));
+    --space-card: var(--space-6);
+    --space-inset-2xs: var(--space-1);
+    --space-inset-xs: var(--space-2);
+    --space-inset-sm: var(--space-3);
+    --space-inset-md: var(--space-4);
+    --space-inset-lg: var(--space-6);
+    --space-gap-2xs: var(--space-1);
+    --space-gap-xs: var(--space-2);
+    --space-gap-sm: var(--space-3);
+    --space-gap-md: var(--space-4);
+    --space-gap: var(--space-6);
+    --space-gap-lg: var(--space-8);
+    /* Décalage sous une ancre ciblée, espacement du pied de page */
+    --space-scroll-offset: var(--space-8);
+    --space-footer-start: var(--space-12);
+    --space-footer-end: var(--space-8);
+    /* Hauteur du logo : en-tête mobile, en-tête desktop et pied de page */
+    --size-logo: var(--space-16);
+    --size-logo-lg: var(--space-24);
+
+    /* Formes */
+    --radius-card: var(--radius-20);
+    --radius-control: var(--radius-12);
+    --radius-tag: var(--radius-4);
+    --radius-pill: var(--radius-full);
+    --size-content: var(--size-72);
+    --size-reading: var(--size-40);
+
+    /* Mouvement : durées et courbe par rôle */
+    --duration-fast: var(--duration-150);
+    --duration-base: var(--duration-300);
+    --duration-intro: var(--duration-600);
+    --ease-out: var(--ease-out-quart);
+  }
+
+  /* Exigence 6 — prefers-reduced-motion : on met à zéro les durées
+     SÉMANTIQUES. Toutes les transitions qui s'en servent deviennent
+     instantanées (l'état final s'affiche, rien ne bouge) sans toucher
+     aux composants. Les @keyframes, eux, ne sont déclarés que dans
+     @media (prefers-reduced-motion: no-preference) (voir components.css). */
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --duration-fast: 0s;
+      --duration-base: 0s;
+      --duration-intro: 0s;
+    }
+  }
+
+  /* BONUS TECHNIQUE (exigence 5) — bascule de thème CSS-only.
+     La case #theme-toggle INVERSE le thème du système :
+     - système clair + case cochée → sombre ;
+     - système sombre + case cochée → clair.
+     On ne change que color-scheme : tous les light-dark() suivent. */
+  :root:has(#theme-toggle:checked) {
+    color-scheme: dark;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:has(#theme-toggle:checked) {
+      color-scheme: light;
+    }
+  }
+}

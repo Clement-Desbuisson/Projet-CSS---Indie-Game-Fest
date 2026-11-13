@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 25" width="640" height="800" shape-rendering="crispEdges">
+  <title>Logo du Collectif Bitmap</title>
+  <rect width="20" height="25" fill="#68dcc7"/>
+  <path fill="#16041e" d="M6 6h2v2h-2zM8 6h2v2h-2zM10 6h2v2h-2zM12 6h2v2h-2zM6 8h2v2h-2zM14 8h2v2h-2zM6 10h2v2h-2zM14 10h2v2h-2zM6 12h2v2h-2zM8 12h2v2h-2zM10 12h2v2h-2zM12 12h2v2h-2zM6 14h2v2h-2zM14 14h2v2h-2zM6 16h2v2h-2zM14 16h2v2h-2zM6 18h2v2h-2zM8 18h2v2h-2zM10 18h2v2h-2zM12 18h2v2h-2z"/>
+  <path fill="#7f2e9e" d="M5 5h2v2h-2zM7 5h2v2h-2zM9 5h2v2h-2zM11 5h2v2h-2zM5 7h2v2h-2zM13 7h2v2h-2zM5 9h2v2h-2zM13 9h2v2h-2zM5 11h2v2h-2zM7 11h2v2h-2zM9 11h2v2h-2zM11 11h2v2h-2zM5 13h2v2h-2zM13 13h2v2h-2zM5 15h2v2h-2zM13 15h2v2h-2zM5 17h2v2h-2zM7 17h2v2h-2zM9 17h2v2h-2zM11 17h2v2h-2z"/>
+  <path fill="#fcf6fe" d="M2 2h1v1H2zM17 3h1v1h-1zM3 21h1v1H3zM16 20h1v1h-1zM18 12h1v1h-1z"/>
+</svg>

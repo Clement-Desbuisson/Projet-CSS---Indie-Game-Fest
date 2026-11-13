@@ -1,0 +1,23 @@
+/* ==========================================================================
+   main.css — Point d'entrée unique des styles (seul fichier lié dans index.html)
+   --------------------------------------------------------------------------
+   1. On déclare l'ORDRE des layers UNE SEULE FOIS, ici, avant tout le reste.
+      Le dernier layer de la liste l'emporte sur les précédents, quelle que
+      soit la spécificité des sélecteurs : utilities > components > layout
+      > base > reset.
+   2. On importe ensuite chaque fichier. Chaque fichier enveloppe déjà son
+      contenu dans le bon @layer (voir l'en-tête de chacun).
+   Rappel : une instruction @layer « déclarative » (sans bloc) est la seule
+   règle autorisée avant les @import.
+   ⚠ N'écrivez PAS de règles dans ce fichier : une règle hors layer
+     l'emporterait sur TOUS les layers (exigence 1).
+   ========================================================================== */
+
+@layer reset, base, layout, components, utilities;
+
+@import url("reset.css");
+@import url("tokens.css");     /* tokens rangés dans le layer base */
+@import url("base.css");
+@import url("layout.css");
+@import url("components.css");
+@import url("utilities.css");

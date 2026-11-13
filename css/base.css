@@ -1,0 +1,78 @@
+/* ==========================================================================
+   base.css — Layer « base »
+   Rôle : styles par défaut des ÉLÉMENTS HTML (body, titres, liens, focus…).
+   Pas de classes ici : seulement des sélecteurs d'éléments, :where(), :is().
+   Uniquement des tokens SÉMANTIQUES.
+   ========================================================================== */
+
+@layer base {
+  /* Défilement doux vers les ancres, uniquement si l'utilisateur
+     n'a pas demandé à réduire les animations (exigence 6). */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    line-height: 1.6;
+    /* Transition des couleurs lors de la bascule de thème */
+    transition:
+      background-color var(--duration-base) var(--ease-out),
+      color var(--duration-base) var(--ease-out);
+  }
+
+  /* :where() : spécificité nulle (0,0,0) → n'importe quelle classe de
+     composant peut surcharger ces valeurs. Avec :is(), la spécificité
+     serait celle du sélecteur le plus fort de la liste (0,0,1). */
+  :where(h1, h2, h3) {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: var(--font-size-h1);
+    line-height: 1;
+  }
+
+  h2 {
+    font-size: var(--font-size-h2);
+    /* Halo néon de la DA : transparent en thème clair (token --color-glow) */
+    text-shadow: 0 0 0.75em var(--color-glow);
+  }
+
+  h3 {
+    font-size: var(--font-size-h3);
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: var(--color-accent);
+    text-underline-offset: 0.2em;
+  }
+
+  strong {
+    font-weight: 700;
+  }
+
+  /* Exigence 7 : focus TOUJOURS visible au clavier. :focus-visible ne
+     l'affiche que quand c'est utile (clavier), pas au clic souris. */
+  :focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: var(--color-action);
+    color: var(--color-on-action);
+  }
+}

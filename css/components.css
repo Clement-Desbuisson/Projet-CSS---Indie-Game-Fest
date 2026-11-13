@@ -1,0 +1,718 @@
+/* ==========================================================================
+   components.css — Layer « components »
+   Rôle : les COMPOSANTS réutilisables (bouton, carte, offre, créneau,
+   item de FAQ, bascule de thème…) et leur apparence.
+   Convention BEM : .bloc, .bloc__element, .bloc--variante.
+   Un composant = un bloc de nesting (3 niveaux maximum).
+   Uniquement des tokens SÉMANTIQUES (voir tokens.css).
+   ========================================================================== */
+
+@layer components {
+  /* ======================================================================
+     1. Lien d'évitement
+     ====================================================================== */
+
+  /* Caché au-dessus de l'écran, il glisse en vue quand il reçoit le focus
+     clavier (premier Tab de la page). */
+  .skip-link {
+    position: absolute;
+    inset-block-start: var(--space-inset-xs);
+    inset-inline-start: var(--space-inset-xs);
+    z-index: 10;
+    padding: var(--space-inset-xs) var(--space-inset-md);
+    border-radius: var(--radius-control);
+    background-color: var(--color-action);
+    color: var(--color-on-action);
+    font-weight: 700;
+    translate: 0 -200%;
+    transition: translate var(--duration-fast) var(--ease-out);
+
+    &:focus-visible {
+      translate: 0 0;
+    }
+  }
+
+  /* ======================================================================
+     2. Bandeaux de marque : en-tête et pied de page
+     ====================================================================== */
+
+  /* :is() factorise les deux bandeaux (spécificité d'une classe). Ils
+     gardent la couleur prune et le motif d'icônes dans les deux thèmes. */
+  :is(.site-header, .site-footer) {
+    background-color: var(--color-surface-brand);
+    background-image: var(--image-pattern);
+    background-size: 50rem auto;
+    color: var(--color-on-brand);
+
+    /* Le violet du focus par défaut manquerait de contraste sur le prune */
+    & :focus-visible {
+      outline-color: var(--color-focus-brand);
+    }
+  }
+
+  .site-header__logo {
+    display: block;
+    flex: none;
+  }
+
+  /* Le PNG du logo a des marges transparentes : on le dimensionne assez
+     grand pour que le texte « Indie Game Fest » reste lisible. */
+  .site-header__logo-img {
+    block-size: var(--size-logo);
+    inline-size: auto;
+
+    @media (width >= 48rem) {
+      block-size: var(--size-logo-lg);
+    }
+  }
+
+  /* Liens de navigation : soulignement qui se déploie au survol / focus.
+     On anime scale (transform) et color : pas de recalcul de mise en page. */
+  .site-nav__link {
+    display: inline-block;
+    padding-block: var(--space-inset-xs);
+    color: var(--color-on-brand);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lead);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out);
+
+    &::after {
+      content: "";
+      display: block;
+      block-size: 2px;
+      background-color: var(--color-accent-brand);
+      scale: 0 1;
+      transition: scale var(--duration-base) var(--ease-out);
+    }
+
+    &:is(:hover, :focus-visible) {
+      color: var(--color-accent-brand);
+
+      &::after {
+        scale: 1 1;
+      }
+    }
+  }
+
+  /* ======================================================================
+     3. Bascule de thème (case à cocher stylée en interrupteur)
+     ====================================================================== */
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-gap-xs);
+    font-size: var(--font-size-small);
+    cursor: pointer;
+  }
+
+  /* appearance: none retire le rendu natif ; la case reste un vrai
+     <input> : focusable, activable à l'espace, annoncée « interrupteur ». */
+  .theme-toggle__input {
+    appearance: none;
+    position: relative;
+    flex: none;
+    inline-size: 2.75rem;
+    block-size: 1.5rem;
+    margin: 0;
+    border: 2px solid var(--color-on-brand);
+    border-radius: var(--radius-pill);
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--ease-out);
+
+    /* Le curseur rond de l'interrupteur */
+    &::before {
+      content: "";
+      position: absolute;
+      inset-block-start: 2px;
+      inset-inline-start: 2px;
+      inline-size: 1rem;
+      aspect-ratio: 1;
+      border-radius: var(--radius-pill);
+      background-color: var(--color-on-brand);
+      transition: translate var(--duration-base) var(--ease-out);
+    }
+
+    &:checked {
+      background-color: var(--color-accent-brand);
+
+      /* 1.25rem = largeur intérieure (2.75rem − 2 × 2px de bordure)
+         − diamètre du curseur (1rem) − 2 × 2px de marge, arrondi. */
+      &::before {
+        translate: 1.25rem 0;
+        background-color: var(--color-surface-brand);
+      }
+    }
+  }
+
+  /* ======================================================================
+     4. Boutons
+     ====================================================================== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-gap-xs);
+    min-block-size: 2.75rem;
+    padding: var(--space-inset-xs) var(--space-inset-lg);
+    border: 2px solid var(--color-action);
+    border-radius: var(--radius-pill);
+    background-color: var(--color-action);
+    color: var(--color-on-action);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    /* Propriétés précises, jamais « all » : translate (compositeur) et
+       couleurs (repeinture légère). */
+    transition:
+      translate var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+
+    &:hover {
+      translate: 0 -3px;
+    }
+
+    &:active {
+      translate: 0 0;
+    }
+  }
+
+  /* Variante secondaire : contour seul, se remplit au survol */
+  .btn--ghost {
+    border-color: currentColor;
+    background-color: transparent;
+    color: var(--color-text);
+
+    &:hover {
+      border-color: var(--color-action);
+      background-color: var(--color-action);
+      color: var(--color-on-action);
+    }
+  }
+
+  /* ======================================================================
+     5. Hero
+     ====================================================================== */
+
+  /* Photo du lieu (Lille Grand Palais) sous un voile aux couleurs du
+     thème : 2 couches de fond, le dégradé uni (voile) PAR-DESSUS l'image.
+     Si l'image ne charge pas, la couleur de surface reste en dessous. */
+  .hero {
+    background-color: var(--color-surface);
+    background-image:
+      linear-gradient(var(--color-hero-overlay), var(--color-hero-overlay)),
+      var(--image-hero);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .hero__title {
+    color: var(--color-accent);
+    text-shadow: 0 0 0.4em var(--color-glow);
+  }
+
+  .hero__infos {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-gap-md);
+  }
+
+  .hero__meta {
+    color: var(--color-highlight);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3);
+    font-weight: 700;
+  }
+
+  .hero__tagline {
+    max-inline-size: var(--size-reading);
+    font-size: var(--font-size-lead);
+  }
+
+  /* Chiffres clés : Flexbox (1 dimension) qui passe à la ligne */
+  .hero__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-gap-xs) var(--space-gap);
+    color: var(--color-text-muted);
+
+    & strong {
+      display: block;
+      color: var(--color-text);
+      font-family: var(--font-heading);
+      font-size: var(--font-size-h2);
+      line-height: 1;
+    }
+  }
+
+  /* Groupe de boutons : Flexbox + gap + passage à la ligne à 320 px */
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-gap-sm);
+  }
+
+  /* Logo du hero : modéré sur mobile, plus grand en desktop */
+  .hero__visual {
+    inline-size: min(100%, 16rem);
+    margin-inline: auto;
+
+    @media (width >= 48rem) {
+      inline-size: min(100%, 26rem);
+    }
+  }
+
+  .hero__logo {
+    inline-size: 100%;
+  }
+
+  .section__intro {
+    max-inline-size: var(--size-reading);
+    color: var(--color-text-muted);
+  }
+
+  /* ======================================================================
+     6. Programme : jours et créneaux
+     ====================================================================== */
+  .day {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-gap-md);
+    padding: var(--space-inset-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background-color: var(--color-surface-raised);
+  }
+
+  .day__title {
+    color: var(--color-accent);
+  }
+
+  /* 2 colonnes : horaire (largeur du plus long) | contenu */
+  .day__list {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-gap-md) var(--space-gap-sm);
+  }
+
+  /* subgrid : chaque créneau s'étend sur les 2 colonnes de la liste et
+     RÉUTILISE ses pistes. Toutes les pastilles horaires ont donc la même
+     largeur (celle de « 14h–16h30 ») et tous les titres commencent sur
+     la même verticale. Sans subgrid, chaque créneau calculerait sa
+     propre colonne horaire et les titres seraient décalés. */
+  .slot {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: start;
+    padding-block-start: var(--space-inset-md);
+    border-block-start: 1px solid var(--color-border);
+    /* Laisse un peu d'air au-dessus quand on arrive par une ancre */
+    scroll-margin-block-start: var(--space-scroll-offset);
+
+    /* Créneau ciblé par « Voir sa session » depuis une carte */
+    &:target {
+      border-block-start-color: var(--color-highlight);
+      background-color: var(--color-surface-alt);
+    }
+  }
+
+  .slot__time {
+    padding: var(--space-inset-2xs) var(--space-inset-xs);
+    border-radius: var(--radius-tag);
+    background-color: var(--color-highlight);
+    color: var(--color-on-highlight);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-small);
+    text-align: center;
+  }
+
+  .slot__title {
+    font-size: var(--font-size-body);
+    line-height: 1.3;
+  }
+
+  .slot__place {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-small);
+  }
+
+  /* ======================================================================
+     7. Carte intervenant (subgrid + container query)
+     ====================================================================== */
+
+  /* Dans la grille des intervenants, la carte occupe les 4 lignes
+     transmises par son <li> (layout.css) et les reprend avec subgrid :
+     image, en-tête, bio et lien sont alignés d'une carte à l'autre même
+     si une bio est plus longue. (Hors grille, dans le hero, subgrid ne
+     s'applique pas et la carte crée simplement ses propres lignes.)
+     Version de BASE (mobile-first) = carte COMPACTE horizontale :
+     petite image à gauche, textes à droite. */
+  .card {
+    display: grid;
+    grid-row: 1 / -1;
+    grid-template-rows: subgrid;
+    grid-template-columns: 5rem 1fr;
+    gap: var(--space-gap-xs) var(--space-gap-md);
+    padding: var(--space-inset-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background-color: var(--color-surface-raised);
+    transition: translate var(--duration-base) var(--ease-out);
+
+    &:is(:hover, :focus-within) {
+      translate: 0 -4px;
+    }
+
+    /* Textes dans la 2e colonne */
+    & > :not(.card__media) {
+      grid-column: 2;
+    }
+  }
+
+  .card__media {
+    grid-row: 1 / span 4;
+    inline-size: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--radius-control);
+    background-color: var(--color-surface-alt);
+  }
+
+  /* En-tête de carte : Flexbox, le badge se place à côté du nom s'il y a
+     la place, sinon il passe à la ligne. */
+  .card__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: start;
+    gap: var(--space-gap-2xs) var(--space-gap-xs);
+  }
+
+  /* Taille fixée par la classe : le nom est un <h3> dans la grille mais
+     un <h2> dans le hero (hiérarchie de titres continue). */
+  .card__name {
+    flex: 1 1 100%;
+    font-size: var(--font-size-h3);
+    text-shadow: none;
+  }
+
+  .card__role {
+    flex: 1 1 100%;
+    color: var(--color-highlight);
+    font-size: var(--font-size-small);
+    font-weight: 600;
+  }
+
+  .card__bio {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-small);
+  }
+
+  .card__link {
+    align-self: end;
+    justify-self: start;
+    padding-block: var(--space-inset-2xs);
+    font-weight: 700;
+  }
+
+  /* Badges : même apparence pour la carte et l'offre (:is factorise) */
+  :is(.card__badge, .offer__badge) {
+    padding: var(--space-inset-2xs) var(--space-inset-sm);
+    border-radius: var(--radius-pill);
+    background-color: var(--color-highlight);
+    color: var(--color-on-highlight);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-small);
+    line-height: 1.2;
+  }
+
+  /* CONTAINER QUERY (exigence 3) — conteneurs nommés « card-host » :
+     - contexte 1 : la liste .speakers (layout.css), large en desktop ;
+     - contexte 2 : le bandeau .hero__spotlight, étroit (≈ 27rem).
+     La carte réagit à la largeur de SON conteneur, pas de la fenêtre :
+     à 1440 px, la même carte est verticale dans la grille et compacte
+     dans le hero. Au-delà de 40rem de conteneur → carte VERTICALE :
+     une colonne, grande image en haut. */
+  @container card-host (inline-size > 40rem) {
+    .card {
+      grid-template-columns: 1fr;
+      row-gap: var(--space-gap-sm);
+
+      & > :not(.card__media) {
+        grid-column: auto;
+      }
+    }
+
+    .card__media {
+      grid-row: auto;
+    }
+  }
+
+  /* ======================================================================
+     8. Offres de la billetterie
+     ====================================================================== */
+  .offer {
+    display: grid;
+    grid-row: 1 / -1;
+    grid-template-rows: subgrid;
+    row-gap: var(--space-gap-md);
+    padding: var(--space-card);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background-color: var(--color-surface-raised);
+    transition: translate var(--duration-base) var(--ease-out);
+
+    &:hover {
+      translate: 0 -4px;
+    }
+  }
+
+  /* :has() (exigence 4) : l'offre qui CONTIENT un badge est mise en avant
+     automatiquement. Déplacer le badge dans le HTML suffit à changer
+     l'offre vedette, sans toucher au CSS ni ajouter de classe. */
+  .offer:has(.offer__badge) {
+    border-color: var(--color-action);
+    box-shadow: 0 0 2rem var(--color-glow);
+  }
+
+  .offer__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-gap-xs);
+  }
+
+  .offer__price {
+    color: var(--color-text-muted);
+
+    & .offer__amount {
+      display: block;
+      color: var(--color-text);
+      font-family: var(--font-heading);
+      font-size: var(--font-size-price);
+      line-height: 1.1;
+    }
+  }
+
+  .offer__features {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-gap-xs);
+
+    /* Puce : petit carré « pixel » dessiné en CSS (aucun texte lu) */
+    & li {
+      display: flex;
+      gap: var(--space-gap-xs);
+
+      &::before {
+        content: "";
+        flex: none;
+        inline-size: 0.5em;
+        aspect-ratio: 1;
+        margin-block-start: 0.55em;
+        background-color: var(--color-highlight);
+      }
+    }
+  }
+
+  .offer__action {
+    align-self: end;
+  }
+
+  /* ======================================================================
+     9. FAQ (<details>/<summary>)
+     ====================================================================== */
+  .faq {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-gap-sm);
+  }
+
+  .faq-item {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    background-color: var(--color-surface-raised);
+    transition: border-color var(--duration-fast) var(--ease-out);
+
+    &[open] {
+      border-color: var(--color-accent);
+    }
+
+    /* Le « + » pivote en « × » à l'ouverture (transition sur rotate) */
+    &[open] .faq-item__question::after {
+      rotate: 45deg;
+    }
+  }
+
+  .faq-item__question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-gap-md);
+    padding: var(--space-inset-md);
+    font-weight: 700;
+    list-style: none;
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--ease-out);
+
+    &:hover {
+      color: var(--color-accent);
+    }
+
+    /* Icône décorative : texte alternatif vide après le « / » pour que
+       les lecteurs d'écran ne lisent pas « plus ». */
+    &::after {
+      content: "+" / "";
+      flex: none;
+      color: var(--color-accent);
+      font-family: var(--font-heading);
+      font-size: var(--font-size-h3);
+      line-height: 1;
+      transition: rotate var(--duration-base) var(--ease-out);
+    }
+  }
+
+  .faq-item__answer {
+    padding: 0 var(--space-inset-md) var(--space-inset-md);
+    color: var(--color-text-muted);
+  }
+
+  /* ======================================================================
+     10. Pied de page
+     ====================================================================== */
+  .site-footer {
+    & a {
+      color: var(--color-on-brand);
+      text-decoration: none;
+      transition: color var(--duration-fast) var(--ease-out);
+
+      &:hover {
+        color: var(--color-accent-brand);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .site-footer__logo {
+    inline-size: auto;
+    block-size: var(--size-logo-lg);
+  }
+
+  /* Réseaux : icônes centrées entre deux filets horizontaux. Les filets
+     sont les pseudo-éléments de la liste Flexbox : flex: 1 leur fait
+     prendre toute la place restante de chaque côté. */
+  .socials {
+    display: flex;
+    align-items: center;
+    gap: var(--space-gap-xs);
+    inline-size: 100%;
+
+    &::before,
+    &::after {
+      content: "";
+      flex: 1;
+      border-block-start: 2px solid var(--color-on-brand);
+    }
+  }
+
+  /* Cible tactile de 2.75rem (> 24 px) autour d'une icône de 24 px */
+  .socials__link {
+    display: grid;
+    place-items: center;
+    inline-size: 2.75rem;
+    aspect-ratio: 1;
+    border-radius: var(--radius-pill);
+  }
+
+  .site-footer__title {
+    margin-block-end: var(--space-gap-sm);
+    font-size: var(--font-size-h3);
+    text-transform: uppercase;
+    text-shadow: none;
+  }
+
+  .site-footer__links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-gap-xs);
+    font-family: var(--font-heading);
+    font-style: normal;
+  }
+
+  :is(.site-footer__legal, .site-footer__credits) {
+    color: var(--color-on-brand-muted);
+    font-size: var(--font-size-small);
+  }
+
+  .site-footer__copy {
+    font-family: var(--font-heading);
+  }
+
+  /* ======================================================================
+     11. Animations @keyframes (exigence 6)
+     Déclarées UNIQUEMENT si l'utilisateur n'a pas demandé à réduire les
+     animations : avec prefers-reduced-motion: reduce, aucun de ces blocs
+     ne s'applique et tout le contenu est visible immédiatement (les
+     keyframes ne définissent qu'un état de départ « from »).
+     ====================================================================== */
+  @media (prefers-reduced-motion: no-preference) {
+    /* Apparition du hero en cascade : titre, infos, puis boutons.
+       animation-fill-mode « backwards » applique l'état « from » pendant
+       le délai, pour éviter un flash avant le départ. */
+    .hero__title,
+    .hero__infos,
+    .hero__actions {
+      animation: rise-in var(--duration-intro) var(--ease-out) backwards;
+    }
+
+    .hero__infos {
+      animation-delay: var(--duration-fast);
+    }
+
+    .hero__actions {
+      animation-delay: var(--duration-base);
+    }
+
+    /* Logo : apparition « en escalier » (steps) façon pixel art */
+    .hero__logo {
+      animation: pixel-pop var(--duration-intro) steps(5, end) var(--duration-base) backwards;
+    }
+
+    /* Bouton principal : 3 pulsations seulement, puis il s'arrête
+       (pas d'animation infinie qui distrait la lecture). */
+    .btn--cta {
+      animation: cta-pulse var(--duration-intro) ease-in-out var(--duration-intro) 3;
+    }
+
+    /* Réponse de FAQ : glisse légèrement en apparaissant */
+    .faq-item[open] .faq-item__answer {
+      animation: rise-in var(--duration-base) var(--ease-out);
+    }
+  }
+
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      translate: 0 1rem;
+    }
+  }
+
+  @keyframes pixel-pop {
+    from {
+      opacity: 0;
+      scale: 0.6;
+    }
+  }
+
+  @keyframes cta-pulse {
+    50% {
+      scale: 1.06;
+    }
+  }
+}

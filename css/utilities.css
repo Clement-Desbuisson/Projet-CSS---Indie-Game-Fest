@@ -1,0 +1,19 @@
+/* ==========================================================================
+   utilities.css — Layer « utilities »
+   Rôle : petites classes à UN seul usage (préfixe u-). Ce layer étant le
+   dernier déclaré, ses règles l'emportent sur tous les autres SANS
+   !important (exigence 8).
+   ========================================================================== */
+
+@layer utilities {
+  /* Masque visuellement un élément tout en le laissant lisible par les
+     lecteurs d'écran (ex. libellé de la bascule de thème). */
+  .u-visually-hidden {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}

@@ -1,0 +1,222 @@
+/* ==========================================================================
+   layout.css — Layer « layout »
+   Rôle : la MISE EN PAGE (conteneurs, sections, grilles de l'en-tête, du
+   hero, du programme, des intervenants, des offres et du footer).
+   L'apparence des composants (cartes, boutons…) est dans components.css.
+   Mobile-first : styles de base pour 320 px, puis @media (width >= …)
+   pour élargir (exigence 3). Uniquement des tokens sémantiques.
+   ========================================================================== */
+
+@layer layout {
+  /* ---------- Conteneurs et sections -------------------------------- */
+
+  /* Conteneur centré : 100 % moins les gouttières, plafonné à 72rem.
+     min() évite toute media query et tout débordement à 320 px. */
+  .container {
+    inline-size: min(100% - 2 * var(--space-gutter), var(--size-content));
+    margin-inline: auto;
+  }
+
+  .container--narrow {
+    inline-size: min(100% - 2 * var(--space-gutter), var(--size-reading));
+  }
+
+  .section {
+    padding-block: var(--space-section);
+  }
+
+  .section--alt {
+    background-color: var(--color-surface-alt);
+  }
+
+  /* Empilement vertical régulier : Flexbox en colonne + gap (pas de marges) */
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-gap);
+  }
+
+  /* ---------- En-tête (Flexbox, 1 dimension) ------------------------ */
+
+  .site-header__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-gap-sm) var(--space-gap);
+    padding-block: var(--space-inset-sm);
+  }
+
+  /* La nav prend la place restante ; sous 320–600 px elle passe à la
+     ligne toute seule grâce à flex-wrap (base de 16rem). */
+  .site-nav {
+    flex: 1 1 16rem;
+  }
+
+  .site-nav__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-gap-2xs) var(--space-gap-md);
+
+    @media (width >= 48rem) {
+      justify-content: center;
+    }
+  }
+
+  /* ---------- Hero : grille à zones nommées (exigence 2) ------------
+     Mobile : une colonne, dans l'ordre de lecture.
+     Desktop : texte à gauche ; visuel puis invitée d'honneur à droite.
+     Chaque zone forme un rectangle (« infos » couvre 2 lignes).
+     Seules grid-template-columns / grid-template-areas changent ;
+     les enfants gardent leur grid-area. */
+  .hero__inner {
+    display: grid;
+    gap: var(--space-gap);
+    padding-block: var(--space-section);
+    grid-template-areas:
+      "titre"
+      "infos"
+      "actions"
+      "affiche"
+      "visuel";
+
+    @media (width >= 48rem) {
+      grid-template-columns: 3fr 2fr;
+      grid-template-areas:
+        "titre   visuel"
+        "infos   visuel"
+        "infos   affiche"
+        "actions affiche";
+      align-items: center;
+    }
+  }
+
+  /* 2e contexte de la container query (exigence 3) : un bandeau étroit
+     (≈ 27rem en desktop) où la carte reste en version compacte. */
+  .hero__spotlight {
+    grid-area: affiche;
+    container: card-host / inline-size;
+  }
+
+  .hero__title {
+    grid-area: titre;
+  }
+
+  .hero__infos {
+    grid-area: infos;
+  }
+
+  .hero__actions {
+    grid-area: actions;
+  }
+
+  .hero__visual {
+    grid-area: visuel;
+  }
+
+  /* ---------- Programme : grille à zones nommées (exigence 2) ------- */
+  .programme {
+    display: grid;
+    gap: var(--space-gap);
+    grid-template-areas:
+      "titre"
+      "jour1"
+      "jour2";
+
+    @media (width >= 48rem) {
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "titre titre"
+        "jour1 jour2";
+    }
+  }
+
+  .programme__title {
+    grid-area: titre;
+  }
+
+  .programme__day1 {
+    grid-area: jour1;
+  }
+
+  .programme__day2 {
+    grid-area: jour2;
+  }
+
+  /* ---------- Intervenants : grille + subgrid + container ----------- */
+
+  /* auto-fit : autant de colonnes d'au moins 18rem que possible, étirées
+     à 1fr (3 colonnes à 72rem, 1 seule à 320 px). min(100%, 18rem)
+     empêche la colonne de déborder sur un très petit écran.
+     La liste est aussi le CONTENEUR de requête « card-host »
+     (exigence 3, 1er contexte) : voir la container query de .card.
+     ⚠ Le conteneur ne peut pas être le <li> : container-type applique
+     une containment de layout, et un élément contenu ne peut plus être
+     un subgrid (son subgrid serait ignoré). */
+  .speakers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: var(--space-gap);
+    container: card-host / inline-size;
+  }
+
+  /* Chaque élément de liste occupe 4 lignes de la grille parente (image,
+     en-tête, bio, lien) et les transmet à sa carte grâce à subgrid. */
+  .speakers__item {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+  }
+
+  /* ---------- Billetterie : grille + subgrid ------------------------ */
+  .offers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+    gap: var(--space-gap);
+  }
+
+  /* 4 lignes partagées (en-tête, prix, contenu, bouton) : les prix et
+     les boutons des 3 offres restent alignés malgré des listes de
+     longueurs différentes. */
+  .offers__item {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+  }
+
+  /* ---------- Pied de page (Flexbox + raccourci flex) ---------------
+     Empilement centré : logo + réseaux, 3 colonnes, mentions. */
+  .site-footer__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-gap-lg);
+    padding-block: var(--space-footer-start) var(--space-footer-end);
+    text-align: center;
+  }
+
+  .site-footer__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-gap-md);
+  }
+
+  .site-footer__columns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-gap-lg) var(--space-gap);
+  }
+
+  /* flex: 1 1 15rem → grandit (1), rétrécit (1), base de 15rem :
+     3 colonnes côte à côte en desktop, empilées sur mobile. */
+  .site-footer__block {
+    flex: 1 1 15rem;
+  }
+
+  .site-footer__bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-gap-xs);
+  }
+}
